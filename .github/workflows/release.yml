@@ -30,13 +30,4 @@ jobs:
             -d "{\"tag_name\": \"$updated_version\"}"
 
      
-      - name: Upload Release Asset
-        id: upload-release-asset 
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./version.zip
-          asset_name: version.zip
-          asset_content_type: application/zip
+     
