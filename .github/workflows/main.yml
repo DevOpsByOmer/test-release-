@@ -1,0 +1,31 @@
+name: Update Version on Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  update_version:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Downgrade version
+        run: |
+          # Replace 'VERSION_FILE' with the path to your version file
+          VERSION_FILE="version.txt"
+          sed -i 's/0.3/0.2/g' $VERSION_FILE
+
+      - name: Commit changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add $VERSION_FILE
+          git commit -m "Downgrade version from 0.3 to 0.2 [skip ci]"
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GIT_TOKEN }}
