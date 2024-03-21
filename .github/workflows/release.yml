@@ -29,17 +29,7 @@ jobs:
             "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/latest" \
             -d "{\"tag_name\": \"$updated_version\"}"
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
-        with:
-          tag_name: ${{ steps.check_release_version.outputs.version }}
-          release_name: Release ${{ steps.check_release_version.outputs.version }}
-          draft: false
-          prerelease: false
-
+     
       - name: Upload Release Asset
         id: upload-release-asset 
         uses: actions/upload-release-asset@v1
