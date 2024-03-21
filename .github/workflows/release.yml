@@ -1,4 +1,4 @@
-name: Update Release Version
+name: Update Release Version 0.2
 
 on:
   push:
