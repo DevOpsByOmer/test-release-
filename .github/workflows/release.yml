@@ -24,7 +24,7 @@ jobs:
           updated_version="v0.2"
           echo "Updating release version to $updated_version"
           curl -X PATCH \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Authorization: token ${{ secrets.GIT_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
             "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/latest" \
             -d "{\"tag_name\": \"$updated_version\"}"
