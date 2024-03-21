@@ -16,7 +16,9 @@ jobs:
 
       - name: Check Release Version
         id: check_release_version
-        run: echo "::set-output name=version::$(echo ${GITHUB_REF#refs/tags/})"
+        run: |
+          echo "version=$(echo ${GITHUB_REF#refs/tags/})" >> $GITHUB_ENV
+      
 
       - name: Update Release Version if necessary
         if: steps.check_release_version.outputs.version != 'v0.2'
