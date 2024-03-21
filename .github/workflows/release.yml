@@ -1,0 +1,16 @@
+name: Update Release Version
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  update_release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Update release version
+        run: |
+          release_version=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/latest" | jq -r '.tag_name')
+          updated_version="v0.2"
+          curl -X PATCH -H "Authorization: token ${{ secrets.GIT_TOKEN }}" -H "Accept: application/vnd.github.v3+json" "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/latest" -d "{\"tag_name\": \"$updated_version\"}"
