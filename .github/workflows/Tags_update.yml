@@ -3,7 +3,10 @@ name: Update Release Version tags
 on:
   push:
     tags:
-    - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+  create:
+    tags:
+      - 'v*' # Create events to matching v*, i.e. v1.0, v20.15.10
 
 jobs:
   update_release:
@@ -33,4 +36,3 @@ jobs:
             -H "Accept: application/vnd.github.v3+json" \
             "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/$release_id" \
             -d "{\"tag_name\": \"$updated_version\"}"
-      
