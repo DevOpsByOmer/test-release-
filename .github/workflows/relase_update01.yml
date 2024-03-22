@@ -2,7 +2,7 @@ name: Update Release Version 0.2
 
 on:
   release:
-    types: [published]
+    types: [published, deleted]
 
 jobs:
   update_release:
