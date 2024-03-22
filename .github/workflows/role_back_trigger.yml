@@ -16,6 +16,9 @@ jobs:
       - name: Set Release Version Environment Variable
         run: echo "version=$(echo ${GITHUB_REF#refs/tags/})" >> $GITHUB_ENV
 
+      - name: Debug Current Version
+        run: echo "Current version is $(echo ${GITHUB_REF#refs/tags/})"
+
       - name: Update Release Version if necessary
         if: steps.check_release_version.outputs.version != 'v0.2'
         run: |
