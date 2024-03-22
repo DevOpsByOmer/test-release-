@@ -2,7 +2,7 @@ name: Update Release Version roll back
 
 on:
   release:
-    types: [published, deleted]
+    types: [deleted]
 
 jobs:
   update_release:
