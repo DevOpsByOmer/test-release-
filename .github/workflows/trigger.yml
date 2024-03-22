@@ -2,7 +2,7 @@ name: Update Release Version tags xx
 
 on:
   release:
-    types: [edited, deleted]
+    types: [edited]
 
 jobs:
   update_release:
