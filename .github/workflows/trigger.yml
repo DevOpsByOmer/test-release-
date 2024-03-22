@@ -3,7 +3,7 @@ name: Rollback Release Version
 on:
   push:
     tags:
-      - 'v*'
+      - '*'
 
 jobs:
   rollback_release:
@@ -20,6 +20,7 @@ jobs:
       - name: Check Previous Tags
         id: check_previous_tags
         run: |
+          git fetch --tags
           previous_tags=$(git tag -l)
           echo "::set-output name=previous_tags::$previous_tags"
 
@@ -40,4 +41,4 @@ jobs:
         with:
           tag: ${{ steps.check_new_tag_version.outputs.new_tag_version }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
