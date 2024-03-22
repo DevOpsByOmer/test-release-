@@ -19,7 +19,9 @@ jobs:
       - name: Update Release Version if necessary
         if: steps.check_release_version.outputs.version != 'v0.2'
         run: |
+          current_version=$(echo ${GITHUB_REF#refs/tags/})
           updated_version="v0.2"
+          echo "Current version is $current_version"
           echo "Updating release version to $updated_version"
           release_id=$(curl -s -H "Authorization: token ${{ secrets.GIT_TOKEN }}" "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/latest" | jq -r '.id')
           curl -X PATCH \
