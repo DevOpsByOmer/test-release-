@@ -40,4 +40,4 @@ jobs:
         with:
           tag: ${{ steps.check_new_tag_version.outputs.new_tag_version }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
