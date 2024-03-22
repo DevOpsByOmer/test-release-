@@ -1,47 +1,42 @@
-name: Update Release Version
+name: Rollback Release Version
 
 on:
-  pull_request:
-    paths:
-      - 'refs/tags/*'
+  release:
+    types: [edited]
 
 jobs:
-  update_release:
-    name: Update Release Version
+  rollback_release:
+    name: Rollback Release
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 0  # Fetch all history so we can detect tag changes
+      
+      - name: Check New Tag Version
+        id: check_new_tag_version
+        run: echo "::set-output name=new_tag_version::$(echo ${GITHUB_REF#refs/tags/})"
 
-      - name: Check if Tag Changed
-        id: tag_changed
+      - name: Check Previous Tags
+        id: check_previous_tags
         run: |
-          # Check if the tag has changed in the latest commit
-          if git diff HEAD^ HEAD --quiet -- refs/tags/; then
-            echo "Tag has not changed"
-            echo "::set-output name=tag_changed::false"
+          previous_tags=$(git tag -l)
+          echo "::set-output name=previous_tags::$previous_tags"
+
+      - name: Check if Tag Rollback is Needed
+        id: check_rollback_needed
+        run: |
+          if echo "${{ steps.check_previous_tags.outputs.previous_tags }}" | grep -q "${{ steps.check_new_tag_version.outputs.new_tag_version }}"; then
+            echo "Rollback needed"
+            echo "::set-output name=rollback_needed::true"
           else
-            echo "Tag has changed"
-            echo "::set-output name=tag_changed::true"
+            echo "No rollback needed"
+            echo "::set-output name=rollback_needed::false"
           fi
 
-      - name: Check Tag Version
-        if: steps.tag_changed.outputs.tag_changed == 'true'
-        id: check_tag_version
-        run: echo "::set-output name=version::$(echo ${GITHUB_REF#refs/tags/})"
-
-      - name: Update Release Version if necessary
-        if: steps.check_tag_version.outputs.version != 'v0.2'
-        run: |
-          updated_version="v0.2"
-          echo "Updating release version to $updated_version"
-          release_id=$(curl -s -H "Authorization: token ${{ secrets.GIT_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/releases/latest" | jq -r '.id')
-          curl -X PATCH \
-            -H "Authorization: token ${{ secrets.GIT_TOKEN }}" \
-            -H "Content-Type: application/json" \
-            -H "Accept: application/vnd.github.v3+json" \
-            "https://api.github.com/repos/${{ github.repository }}/releases/$release_id" \
-            -d "{\"tag_name\": \"$updated_version\"}"
+      - name: Rollback Release if necessary
+        if: steps.check_rollback_needed.outputs.rollback_needed == 'true'
+        uses: author/action-rollback@stable
+        with:
+          tag: ${{ steps.check_new_tag_version.outputs.new_tag_version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
