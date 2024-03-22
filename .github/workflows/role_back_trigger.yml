@@ -1,4 +1,4 @@
-name: Update Release Version 0.2
+name: Update Release Version roll back
 
 on:
   release:
