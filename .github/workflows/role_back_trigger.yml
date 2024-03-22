@@ -2,7 +2,7 @@ name: Update Release Version roll back
 
 on:
   release:
-    types: [published, deleted]
+    types: [published]
 
 jobs:
   update_release:
@@ -16,15 +16,10 @@ jobs:
       - name: Set Release Version Environment Variable
         run: echo "version=$(echo ${GITHUB_REF#refs/tags/})" >> $GITHUB_ENV
 
-      - name: Debug Current Version
-        run: echo "Current version is $(echo ${GITHUB_REF#refs/tags/})"
-
       - name: Update Release Version if necessary
         if: steps.check_release_version.outputs.version != 'v0.2'
         run: |
-          current_version=$(echo ${GITHUB_REF#refs/tags/})
           updated_version="v0.2"
-          echo "Current version is $current_version"
           echo "Updating release version to $updated_version"
           release_id=$(curl -s -H "Authorization: token ${{ secrets.GIT_TOKEN }}" "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/latest" | jq -r '.id')
           curl -X PATCH \
@@ -33,3 +28,4 @@ jobs:
             -H "Accept: application/vnd.github.v3+json" \
             "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/$release_id" \
             -d "{\"tag_name\": \"$updated_version\"}"
+      
