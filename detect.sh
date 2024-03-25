@@ -17,7 +17,7 @@ if [ "$(git tag --contains $current_commit)" = "" ]; then
     # Trigger GitHub Actions workflow
     response=$(curl -X POST \
         -H "Accept: application/vnd.github.v3+json" \
-        -H "Authorization: Bearer $GIT_TOKEN" \
+        -H "Authorization: Bearer $GITHUB_TOKEN" \
         -d '{"ref": "main"}' \
         "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/workflows/roll_back_trigger/dispatches")
 
