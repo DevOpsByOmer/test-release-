@@ -1,8 +1,8 @@
 name: Update Release Version 0.2
 
 on:
-  release:
-    types: [published, deleted]
+  repository_dispatch:
+    types: [release.updated]
 
 jobs:
   update_release:
