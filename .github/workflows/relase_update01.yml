@@ -4,11 +4,9 @@ on:
   push:
     branches:
       - main
-  release:
+  tags:
     types: [edited]
-  repository_dispatch:
-    types: [release.updated]
-
+  
 jobs:
   update_release:
     name: Update Release Version
