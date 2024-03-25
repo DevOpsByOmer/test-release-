@@ -16,7 +16,7 @@ if [ "$(git tag --contains $current_commit)" = "" ]; then
     
     # Trigger GitHub Actions workflow
     response=$(curl -X PATCH \
-        -H "Authorization: token ${secrets.GIT_TOKEN}" \
+        -H "Authorization: token $GIT_TOKEN" \
         -H "Content-Type: application/json" \
         -H "Accept: application/vnd.github.v3+json" \
         "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/latest" \
