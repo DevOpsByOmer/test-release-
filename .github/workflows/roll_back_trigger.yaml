@@ -15,4 +15,4 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Run rollback detection script
-        run: ./detect-rollback.sh
+        run: ./detect.sh
