@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        
+      - run: chmod +x detect.sh
 
       - name: Run rollback detection script
         run: ./detect.sh
