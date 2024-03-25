@@ -4,6 +4,7 @@ on:
   release:
     types:
       - deleted
+  workflow_dispatch:
 
 jobs:
   rollback_release:
