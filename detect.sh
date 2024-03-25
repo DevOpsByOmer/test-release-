@@ -14,19 +14,21 @@ fi
 if [ "$(git tag --contains $current_commit)" = "" ]; then
     echo "Rollback detected"
     
-    # Trigger GitHub Actions workflow
-    response=$(curl -X POST \
-        -H "Accept: application/vnd.github.v3+json" \
-        -H "Authorization: token $GIT_TOKEN" \
-        -d '{"ref": "main"}' \
-        "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/workflows/roll_back_trigger/dispatches")
-
-    if [ "$(echo "$response" | jq -r '.message')" = "Bad credentials" ]; then
-        echo "Error: Bad credentials. Please ensure that your GitHub token is valid."
-    elif [ "$(echo "$response" | jq -r '.id')" != "" ]; then
-        echo "Workflow dispatch successfully triggered."
-    else
-        echo "Error: Failed to trigger workflow dispatch."
+    # Update release version if necessary
+    if [ "$(git tag --contains $current_commit)" != 'v0.2' ]; then
+        updated_version="v0.2"
+        echo "Updating release version to $updated_version"
+        
+        # Get the release ID of the latest release
+        release_id=$(curl -s -H "Authorization: token $GIT_TOKEN" "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/latest" | jq -r '.id')
+        
+        # Patch the release with the updated version
+        curl -X PATCH \
+            -H "Authorization: token $GIT_TOKEN" \
+            -H "Content-Type: application/json" \
+            -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/$release_id" \
+            -d "{\"tag_name\": \"$updated_version\"}"
     fi
 else
     echo "No rollback detected"
