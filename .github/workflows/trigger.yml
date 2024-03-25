@@ -1,9 +1,9 @@
 name: Rollback Release Version
 
 on:
-  push:
-    tags:
-      - '*'
+  release:
+    types:
+      - deleted
 
 jobs:
   rollback_release:
