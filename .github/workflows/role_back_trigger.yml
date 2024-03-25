@@ -2,7 +2,12 @@ name: Update Release Version roll back
 
 on:
   release:
-    types: [deleted]
+    types: [published]
+  workflow_dispatch:
+  push:
+    tags:
+    - '*'
+
 
 jobs:
   update_release:
